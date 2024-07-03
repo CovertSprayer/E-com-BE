@@ -17,18 +17,52 @@ router.get('/', async (req, res) => {
 })
 
 //read one product
-router.get('/:id', async () => {
-
+router.get('/:id', async (req, res) => {
+    try {
+        const id = req.params;
+        const product = await ProductModel.findOne({ _id: id });
+        res.status(200).json({
+            product
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Internal Server Error.'
+        })
+    }
 })
 
 // update product
 router.put('/:id', async () => {
-
+    try {
+        const id = req.params;
+        const value = req.body;
+        const product = await ProductModel.findOneAndUpdate({ _id: id }, { ...value }, {new: true});
+        res.status(200).json({
+            product
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Internal Server Error.'
+        })
+    }
 })
 
 // delete product
 router.delete('/:id', async () => {
-
+    try {
+        const id = req.params;
+        const product = await ProductModel.findOneAndDelete({ _id: id });
+        res.status(200).json({
+            product
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Internal Server Error.'
+        })
+    }
 })
 
 module.exports = router;
