@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 //read one product
 router.get('/:id', async (req, res) => {
     try {
-        const id = req.params;
+        const id = req.params.id;
         const product = await ProductModel.findOne({ _id: id });
         res.status(200).json({
             product
@@ -35,7 +35,7 @@ router.get('/:id', async (req, res) => {
 // update product
 router.put('/:id', async () => {
     try {
-        const id = req.params;
+        const id = req.params.id;
         const value = req.body;
         const product = await ProductModel.findOneAndUpdate({ _id: id }, { ...value }, {new: true});
         res.status(200).json({
@@ -52,7 +52,7 @@ router.put('/:id', async () => {
 // delete product
 router.delete('/:id', async () => {
     try {
-        const id = req.params;
+        const id = req.params.id;
         const product = await ProductModel.findOneAndDelete({ _id: id });
         res.status(200).json({
             product
