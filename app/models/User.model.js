@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
-  phone: String,
-  password: String,
-  phoneVerified: Boolean
+  phone: {
+    type: String,
+    unique: true
+  }
 });
 
 module.exports = mongoose.model("User", userSchema);

@@ -18,20 +18,6 @@ app.get("/healthCheck", (req, res) => {
   });
 });
 
-// app.use((err, req, res, next) => {
-//     // Log the detailed error for internal purposes
-//     console.error(err.stack);
-
-//     // Determine if the error is an instance of CustomError
-//     const statusCode = err instanceof CustomError ? err.statusCode : 500;
-
-//     // Send a generic error message to the client
-//     res.status(statusCode).json({
-//         success: false,
-//         message: 'An error occurred. Please try again later.'
-//     });
-// });
-
 app.use(useErrorHandler);
 
 const PORT = process.env.PORT || 5000;
