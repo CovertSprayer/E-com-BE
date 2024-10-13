@@ -7,6 +7,6 @@ exports.responseHandler = (
   res.status(statusCode).json({
     success: true,
     message,
-    data,
+    result: data,
   });
 };

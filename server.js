@@ -4,7 +4,7 @@ const app = express();
 const router = require("./app/routes/router");
 const cors = require("cors");
 const connectToDatabase = require("./app/middlewares/db");
-const { useErrorHandler, CustomError } = require("./app/middlewares/errorHandler");
+const { errorHandler, CustomError } = require("./app/middlewares/errorHandler");
 
 connectToDatabase();
 app.use(cors());
@@ -18,7 +18,11 @@ app.get("/healthCheck", (req, res) => {
   });
 });
 
-app.use(useErrorHandler);
+app.use(errorHandler);
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send('Internal Server Error');
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

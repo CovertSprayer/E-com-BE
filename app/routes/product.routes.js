@@ -1,68 +1,14 @@
-const router = require('express').Router();
-const ProductModel = require('../models/Product.model');
+const express = require('express');
+const productsController = require('../controllers/product.controller');
+const { authenticate } = require('../middlewares/auth.middleware');
 
-// read all products
-router.get('/', async (req, res) => {
-    try {
-        const products = await ProductModel.find();
-        res.status(200).json({
-            products: products
-        })
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            message: 'Internal Server Error.'
-        })
-    }
-})
+const router = express.Router();
 
-//read one product
-router.get('/:id', async (req, res) => {
-    try {
-        const id = req.params.id;
-        const product = await ProductModel.findOne({ _id: id });
-        res.status(200).json({
-            product
-        })
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            message: 'Internal Server Error.'
-        })
-    }
-})
-
-// update product
-router.put('/:id', async () => {
-    try {
-        const id = req.params.id;
-        const value = req.body;
-        const product = await ProductModel.findOneAndUpdate({ _id: id }, { ...value }, {new: true});
-        res.status(200).json({
-            product
-        })
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            message: 'Internal Server Error.'
-        })
-    }
-})
-
-// delete product
-router.delete('/:id', async () => {
-    try {
-        const id = req.params.id;
-        const product = await ProductModel.findOneAndDelete({ _id: id });
-        res.status(200).json({
-            product
-        })
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            message: 'Internal Server Error.'
-        })
-    }
-})
+router.get('/', productsController.getAllProducts);
+router.get('/:productId', productsController.getProductById);
+router.use(authenticate);
+router.post('/', productsController.createProduct);
+router.put('/:productId', productsController.updateProduct);
+router.delete('/:productId', productsController.deleteProduct);
 
 module.exports = router;
