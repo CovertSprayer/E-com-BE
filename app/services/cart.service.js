@@ -1,14 +1,19 @@
 const UserModel = require('../models/User.model');
+const ProductModel = require('../models/Product.model');
 
 class CartService {
   async addToCart(userId, productId) {
-    const user = await UserModel.findById(userId);
-    const existingProductIndex = user.cart.findIndex(item => item.product.toString() === productId);
+    const user = await UserModel.findById(userId).populate('cart.product');
+    const existingProductIndex = user.cart.findIndex(item => item.product._id.toString() === productId);
 
     if (existingProductIndex >= 0) {
       user.cart[existingProductIndex].quantity += 1;
     } else {
-      user.cart.push({ product: productId, quantity: 1 });
+      const product = await ProductModel.findById(productId);
+      if(!product){
+        throw new Error("Product not found with the given id")
+      }
+      user.cart.push({ product, quantity: 1 });
     }
 
     await user.save();
@@ -38,8 +43,8 @@ class CartService {
   }
 
   async deleteItemFromCart(userId, productId) {
-    const user = await UserModel.findById(userId);
-    user.cart = user.cart.filter(item => item.product.toString() !== productId);
+    const user = await UserModel.findById(userId).populate('cart.product');
+    user.cart = user.cart.filter(item => item.product._id.toString() !== productId);
     await user.save();
     return user.cart;
   }
